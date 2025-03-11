@@ -31,5 +31,7 @@ func InitFiber() {
 	route.UserRegister(User)
 	User.Use(jwtware.New(Config.GetJwtConfig()))
 
+	route.UserTest(User)
+
 	app.Listen(":3000")
 }

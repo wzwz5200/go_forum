@@ -17,3 +17,9 @@ func UserRegister(R fiber.Router) {
 	R.Get("/register", service.Register)
 
 }
+
+func UserTest(R fiber.Router) {
+
+	R.Get("/test", service.Test)
+
+}

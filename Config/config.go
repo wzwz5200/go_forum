@@ -17,7 +17,7 @@ func GetFiberConfig() fiber.Config {
 func GetJwtConfig() jwtware.Config {
 
 	return jwtware.Config{
-		SigningKey: jwtware.SigningKey{Key: []byte("secret")},
+		SigningKey: jwtware.SigningKey{Key: []byte("128wang123")},
 	}
 
 }

@@ -12,6 +12,8 @@ type User struct {
 	Email    string `gorm:"size:100;uniqueIndex" validate:"required,email"`       // 邮箱：必填，格式必须是 email
 	Password string `gorm:"size:100" validate:"required,min=6,max=100"`           // 密码：必填，最少 6 个字符
 
+	AvatarURL string `gorm:"size:512;default:'https://i.stardots.io/aver/89828644_p0.jpg?width=500&quality=50&blur=0&rotate=0'"`
+
 	CreatedAt time.Time // 注册时间
 	UpdatedAt time.Time // 最后更新时间
 
