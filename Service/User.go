@@ -1,6 +1,7 @@
 package service
 
 import (
+	hashp "web/HashP"
 	request "web/model/Request"
 
 	"github.com/go-playground/validator"
@@ -31,8 +32,18 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
+	//加密密码
+
+	hashPwd, err := hashp.HashPassword(newUser.Password)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "加密密码错误",
+		})
+
+	}
+
 	return c.JSON(fiber.Map{
 		"message": "User registered successfully",
-		"user":    newUser,
+		"pwd":     hashPwd,
 	})
 }
