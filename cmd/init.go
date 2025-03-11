@@ -10,8 +10,7 @@ import (
 )
 
 func InitFiber() {
-
-	//初始化数据库
+	// 初始化数据库
 	initdb.Initdb()
 	app := fiber.New(Config.GetFiberConfig())
 
@@ -19,19 +18,32 @@ func InitFiber() {
 		return c.SendString("Hello, World!")
 	})
 
-	//测试demo api
+	// 创建 API 父路由组
+	api := app.Group("/api") // <-- 新增 API 父级路由组
+
+	// 测试demo api（保持原路径/Human）
 	Human := app.Group("/Human")
 	Human.Use(jwtware.New(Config.GetJwtConfig()))
-
 	route.SetupHumanRoutes(Human)
 
-	// 用户api组
-	User := app.Group("/user")
-	route.UserLogin(User)
-	route.UserRegister(User)
-	User.Use(jwtware.New(Config.GetJwtConfig()))
+	// 用户api组（路径改为 /api/user）
+	User := api.Group("/user") // <-- 改为 API 的子路由组
+	{
+		// 开放路由（无需 JWT）
+		route.UserLogin(User)    // 路径: /api/user/login
+		route.UserRegister(User) // 路径: /api/user/register
 
-	route.UserTest(User)
+		// 受保护路由（应用 JWT 中间件）
+		User.Use(jwtware.New(Config.GetJwtConfig()))
+		route.UserTest(User) // 路径: /api/user/test
+	}
+
+	// 帖子API组（保持原路径/post）
+	POST := api.Group("/post")
+	{
+		route.GetPost(POST)
+	}
+	route.GetPost(POST)
 
 	app.Listen(":3000")
 }

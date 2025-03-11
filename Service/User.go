@@ -58,10 +58,12 @@ func Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	return c.JSON(fiber.Map{"token": t})
+	return c.JSON(fiber.Map{"name": NewUser.Username, "icon": NewUser.AvatarURL, "token": t})
 	//return c.SendString("Hello Login")
 
 }
+
+
 
 //注册
 
