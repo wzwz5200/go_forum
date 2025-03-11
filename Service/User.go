@@ -52,6 +52,19 @@ func Register(c *fiber.Ctx) error {
 
 	}
 
+	//创建用户
+	newUsers := model.User{
+		Username: newUser.Username,
+		Email:    newUser.Email,
+		Password: hashPwd,
+	}
+
+	if err := db.Create(&newUsers).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to create user",
+		})
+	}
+
 	return c.JSON(fiber.Map{
 		"message": "User registered successfully",
 		"pwd":     hashPwd,
