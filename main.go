@@ -1,11 +1,11 @@
 package main
 
-import "web/cmd"
+import (
+	"web/cmd"
+)
 
 func main() {
 
 	cmd.InitFiber()
-
-	
 
 }

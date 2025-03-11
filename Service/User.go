@@ -2,6 +2,8 @@ package service
 
 import (
 	hashp "web/HashP"
+	initdb "web/cmd/Initdb"
+	"web/model"
 	request "web/model/Request"
 
 	"github.com/go-playground/validator"
@@ -18,6 +20,7 @@ func Login(c *fiber.Ctx) error {
 func Register(c *fiber.Ctx) error {
 
 	newUser := request.User{}
+	db := initdb.ReDB
 
 	if err := c.BodyParser(&newUser); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -29,6 +32,13 @@ func Register(c *fiber.Ctx) error {
 	if err := validate.Struct(newUser); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "数据不合法",
+		})
+	}
+	//检查name,email是否存在
+	var existingUser model.User
+	if err := db.Where("email = ? OR username = ?", newUser.Email, newUser.Username).First(&existingUser).Error; err == nil {
+		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
+			"error": "Username or email already exists",
 		})
 	}
 

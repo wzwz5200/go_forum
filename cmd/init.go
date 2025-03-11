@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"web/Config"
+	initdb "web/cmd/Initdb"
 	"web/route"
 
 	jwtware "github.com/gofiber/contrib/jwt"
@@ -9,6 +10,9 @@ import (
 )
 
 func InitFiber() {
+
+	//初始化数据库
+	initdb.Initdb()
 	app := fiber.New(Config.GetFiberConfig())
 
 	app.Get("/", func(c *fiber.Ctx) error {
