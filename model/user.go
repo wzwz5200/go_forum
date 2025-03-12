@@ -17,6 +17,7 @@ type User struct {
 	CreatedAt time.Time // 注册时间
 	UpdatedAt time.Time // 最后更新时间
 
+	
 	Posts    []Post    `gorm:"foreignKey:AuthorID"` // 用户发的帖子
 	Comments []Comment `gorm:"foreignKey:UserID"`   // 用户发的评论
 }

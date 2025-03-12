@@ -45,6 +45,9 @@ func InitFiber() {
 
 		POST.Use(jwtware.New(Config.GetJwtConfig()))
 		route.CreatePost(POST)
+		//创建分区
+		route.CreateSection(POST)
+
 	}
 	route.GetPost(POST)
 
