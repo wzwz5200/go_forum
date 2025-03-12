@@ -8,6 +8,6 @@ import (
 
 func CreateSection(R fiber.Router) {
 
-	R.Post("/create_section", service.CreateSection) //获取所有帖子
+	R.Post("/create_section", service.CreateSection) //创建分区
 
 }
