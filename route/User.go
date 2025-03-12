@@ -8,13 +8,13 @@ import (
 
 func UserLogin(R fiber.Router) {
 
-	R.Get("/login", service.Login)
+	R.Post("/login", service.Login)
 
 }
 
 func UserRegister(R fiber.Router) {
 
-	R.Get("/register", service.Register)
+	R.Post("/register", service.Register)
 
 }
 

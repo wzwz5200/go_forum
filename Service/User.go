@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"time"
 	hashp "web/HashP"
 	initdb "web/cmd/Initdb"
@@ -44,8 +45,9 @@ func Login(c *fiber.Ctx) error {
 
 	claims := jwt.MapClaims{
 
-		"sub": NewUser.ID, // 必须 - 用户唯一标识
+		"user":  fmt.Sprintf("%d", NewUser.ID), // 将 uint 转换为字符串, // 必须 - 用户唯一标识
 
+		
 		"exp": time.Now().Add(time.Hour * 72).Unix(),
 	}
 
@@ -62,8 +64,6 @@ func Login(c *fiber.Ctx) error {
 	//return c.SendString("Hello Login")
 
 }
-
-
 
 //注册
 

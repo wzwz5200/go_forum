@@ -42,6 +42,9 @@ func InitFiber() {
 	POST := api.Group("/post")
 	{
 		route.GetPost(POST)
+
+		POST.Use(jwtware.New(Config.GetJwtConfig()))
+		route.CreatePost(POST)
 	}
 	route.GetPost(POST)
 
