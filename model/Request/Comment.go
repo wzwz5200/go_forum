@@ -1,8 +1,8 @@
 package request
 
 type ReqComment struct {
-	Content string `json:"content" validate:"required,min=1"`
-	PostID  uint   `json:"content"`
+	Content string `json:"content"`
+	PostID  uint   `json:"id"`
 }
 
 type ReqCommentDb struct {

@@ -42,8 +42,8 @@ func Comment(c *fiber.Ctx) error {
 
 	if err = db.Create(&NewComment).Error; err != nil {
 
-		return c.Status(400).JSON(fiber.Map{"error": "发生评论错误"})
+		return c.Status(400).JSON(fiber.Map{"error": "发生评论错误", "req": req})
 	}
 
-	return c.Status(200).JSON(fiber.Map{})
+	return c.Status(200).JSON(fiber.Map{"status": "发送成功"})
 }
