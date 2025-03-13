@@ -54,6 +54,7 @@ func InitFiber() {
 		route.CreatePost(POST)
 		//创建分区
 		route.CreateSection(POST)
+		route.PostComment(POST)
 
 	}
 	route.GetPost(POST)
