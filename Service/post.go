@@ -136,3 +136,26 @@ func CreatePost(c *fiber.Ctx) error {
 		"message": "创建成功",
 	})
 }
+
+func GetSectionPost(c *fiber.Ctx) error {
+
+	db := initdb.ReDB
+
+	var section model.Section
+	var Req request.ReqGetSection
+
+	c.BodyParser(&Req)
+	if err := db.Preload("Posts").
+		Where("name = ?", Req.Name).
+		First(&section).
+		Error; err != nil {
+			
+		return c.Status(400).JSON(fiber.Map{"err": "数据库错误"})
+	}
+	if section.Posts == nil || len(section.Posts) == 0 {
+
+		return c.Status(201).JSON(fiber.Map{"err": "当前分区无帖子"})
+
+	}
+	return c.Status(201).JSON(fiber.Map{"date": section.Posts, "req": Req})
+}

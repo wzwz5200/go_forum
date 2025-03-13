@@ -12,7 +12,14 @@ func CreateSection(R fiber.Router) {
 
 }
 
+//获取使用分区
 func GetAllSection(R fiber.Router) {
 
 	R.Get("/get_all_section",service.GetAllSection)
+}
+
+//传入分区id获取分区帖子
+func GetSectionAllPost(R fiber.Router) {
+
+	R.Get("/get_all_section_post",service.GetSectionPost)
 }
