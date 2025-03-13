@@ -7,6 +7,7 @@ import (
 
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 )
 
 func InitFiber() {
@@ -18,6 +19,7 @@ func InitFiber() {
 		return c.SendString("Hello, World!")
 	})
 
+	app.Get("/metrics", monitor.New())
 	// 创建 API 父路由组
 	api := app.Group("/api") // <-- 新增 API 父级路由组
 
@@ -42,7 +44,8 @@ func InitFiber() {
 	POST := api.Group("/post")
 	{
 		route.GetPost(POST)
-
+		//获取所有分区
+		route.GetAllSection(POST)
 		POST.Use(jwtware.New(Config.GetJwtConfig()))
 		route.CreatePost(POST)
 		//创建分区

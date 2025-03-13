@@ -27,3 +27,17 @@ func CreateSection(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{"date": "创建成功"})
 
 }
+
+func GetAllSection(c *fiber.Ctx) error {
+
+	db := initdb.ReDB
+
+	var newSection []model.Section
+
+	if db.Select("Name", "Description").Find(&newSection).Error != nil {
+		return c.Status(400).JSON(fiber.Map{"date": "查询数据库错误请联系管理员"})
+	}
+
+	return c.Status(200).JSON(fiber.Map{"date": newSection})
+
+}
