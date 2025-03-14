@@ -43,13 +43,16 @@ func InitFiber() {
 	// 帖子API组（保持原路径/post）
 	POST := api.Group("/post")
 	{
+		route.GetSectionAllPost(POST)
 		//传入分区id获取分区帖子
 
 		route.GetPost(POST)
 		//获取所有分区
 		route.GetAllSection(POST)
 		//传入分区name获取分区帖子
-		route.GetSectionAllPost(POST)
+		route.GetPostDetails(POST)
+
+		//jwt
 		POST.Use(jwtware.New(Config.GetJwtConfig()))
 		route.CreatePost(POST)
 		//创建分区

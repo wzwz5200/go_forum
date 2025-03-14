@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"log"
 	"strconv"
 	initdb "web/cmd/Initdb"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
+	"gorm.io/gorm"
 )
 
 func GetAllPost(c *fiber.Ctx) error {
@@ -149,7 +151,7 @@ func GetSectionPost(c *fiber.Ctx) error {
 		Where("name = ?", Req.Name).
 		First(&section).
 		Error; err != nil {
-			
+
 		return c.Status(400).JSON(fiber.Map{"err": "数据库错误"})
 	}
 	if section.Posts == nil || len(section.Posts) == 0 {
@@ -158,4 +160,45 @@ func GetSectionPost(c *fiber.Ctx) error {
 
 	}
 	return c.Status(201).JSON(fiber.Map{"date": section.Posts, "req": Req})
+}
+
+func GetPostDetails(c *fiber.Ctx) error {
+
+	db := initdb.ReDB
+	postID := c.Params("id")
+	if postID == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Post ID is required"})
+	}
+
+	// 转换ID为uint类型
+	id, err := strconv.ParseUint(postID, 10, 32)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid post ID format"})
+	}
+
+	var post model.Post
+	// 查询数据库并预加载关联数据
+	if err := db.Preload("Author").
+		Preload("Section").
+		Preload("Comments", func(db *gorm.DB) *gorm.DB {
+			return db.Preload("Author") // 现在可以正确加载评论作者
+		}).
+		First(&post, id).Error; err != nil {
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Post not found"})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to retrieve post"})
+	}
+
+	// 原子递增浏览数并更新返回的数据
+	if err := db.Model(&post).UpdateColumn("view_count", gorm.Expr("view_count + 1")).Error; err != nil {
+		log.Printf("View count update error: %v", err)
+	} else {
+		post.ViewCount++ // 手动递增以保证返回数据正确
+	}
+
+	// 返回帖子详情（依赖模型结构的json标签过滤敏感字段）
+	return c.JSON(post)
+
 }

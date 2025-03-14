@@ -14,7 +14,11 @@ func GetPost(R fiber.Router) {
 
 func CreatePost(R fiber.Router) {
 
-	R.Post("/createpost", service.CreatePost) //获取所有帖子
+	R.Post("/createpost", service.CreatePost) //创建帖子
 
 }
 
+func GetPostDetails(R fiber.Router) {
+
+	R.Get("/postd/:id", service.GetPostDetails)
+}
